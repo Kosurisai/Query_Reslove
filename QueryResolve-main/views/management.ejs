@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Lab Management System</title>
+    <style>
+        body {
+            background-color: lightskyblue;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            /* max-width: 1500px; */
+            white-space: nowrap; /* Prevent text from wrapping to the next line */
+            overflow-x: scroll; /* Display a horizontal scrollbar when content overflows */
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+
+            margin-top: 20px;
+
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+            word-break: break-all;
+            border-radius: 10px;
+            
+        }
+
+        th {
+            background-color: black;
+            font-weight: bold;
+            white-space: normal;
+            overflow-wrap: break-word;
+            color: whitesmoke;
+            
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        a {
+            text-decoration: none;
+            color: #4caf50;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .logout-btn a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #ccc;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        /* Added styles for action buttons */
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            background-color: #4caf50;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+            margin-top: 10px;
+        }
+
+        .action-btn:hover {
+            background-color: #45a049;
+        }
+
+        .action-btn:active {
+            background-color: #3e8e41;
+        }
+
+        .action-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .pending {
+            background-color: #ff9800;
+            color: #fff;
+        }
+
+        .processing {
+            background-color: #2196f3;
+            color: #fff;
+        }
+
+        .resolved {
+            background-color: #4caf50;
+            color: #fff;
+        }
+
+        /* Adjusted center alignment for table headers */
+        th:nth-child(15) {
+            text-align: center;
+        }
+
+        select {
+            border: none;
+            border-radius: 10px;
+            background-color: #2196f3;
+            padding: 5px;
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Lab Management System</h1>
+        <div class="logout-btn">
+            <a href="/" title="Logout">
+                <span class="gate-symbol">&#128682;</span>
+            </a>
+        </div>
+
+        <h2>
+            <center>List of unresolved queries</center>
+        </h2>
+        <table>
+            <tr>
+                <th style="min-width: 40px;">S No</th>
+                <th style="min-width: 140px;">Date and Time</th>
+                <th style="min-width: 140px;">Name</th>
+                <th style="min-width: 140px;">Email</th>
+                <th style="min-width: 100px;">Emp ID</th>
+                <!-- <th style="min-width: 60px;">Course</th> -->
+                <!-- <th>Year</th> -->
+                <th style="min-width: 60px;">Branch</th>
+                <!-- <th>Section</th> -->
+                <th style="min-width: 80px;">Lab</th>
+                <th style="min-width: 80px;">Lab Room No.</th>
+                <th style="min-width: 80px;">Block No.</th>
+                <!-- <th style="min-width: 80px;">Floor No.</th> -->
+                <th style="min-width: 300px;">Query</th>
+                <th style="min-width: 80px;">Token No.</th>
+                <th style="min-width: 30px;">Action</th>
+            </tr>
+            <% for (let i=0; i < queries.length; i++) { %>
+                <tr>
+                    <td><%- i + 1 %></td>
+                    <td><%- queries[i].format_time %></td>
+                    <td><%- queries[i].name %></td>
+                    <td><%- queries[i].email %></td>
+                    <td><%- queries[i].empid %></td>
+                    <!-- <td><%- queries[i].course %></td> -->
+                    <!-- <td><%- queries[i].year %></td> -->
+                    <td><%- queries[i].branch %></td>
+                    <!-- <td><%- queries[i].section %></td> -->
+                    <td><%- queries[i].lab %></td>
+                    <td><%- queries[i].room %></td>
+                    <td><%- queries[i].block_no %></td>
+                    <!-- <td><%- queries[i].floor_no %></td> -->
+                    <td><%- queries[i].query %></td>
+                    <td><%- queries[i].token_number %></td>
+                    <td>
+                        <form action="/update_query" method="post">
+                            <input type="hidden" name="queryId" value="<%- queries[i].token_number %>">
+                            <select name="action">
+                                <option value="Pending" <% if (queries[i].resolved==='Pending' ) { %>selected<% } %>
+                                        >Pending</option>
+                                <option value="Processing" <% if (queries[i].resolved==='Processing' ) { %>selected<% }
+                                        %>>Processing</option>
+                                <option value="Resolved" <% if (queries[i].resolved==='Resolved' ) { %>selected<% } %>
+                                        >Resolved</option>
+                            </select>
+                            <button type="submit" class="action-btn">
+                                Update
+                            </button>
+                        </form>
+
+                    </td>
+                </tr>
+                <% } %>
+        </table>
+    </div>
+</body>
+
+</html>

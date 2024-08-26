@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>User Interface</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.11.2/dist/css/bootstrap.min.css" />
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #e9ecef;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    .card {
+      background-color: #f3f7ff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      border: 2px solid #4a90e2;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    label {
+      font-weight: bold;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea,
+    select {
+      padding: 8px;
+      border: 1px solid #ccc;
+      width: 95%;
+      border-radius: 4px;
+      background-color: #f8f9fa;
+    }
+
+    select {
+      width: 100%;
+    }
+
+    input[type="submit"] {
+      padding: 10px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    .logout-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    .logout-btn a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #ccc;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .dynamic-field {
+      display: none;
+    }
+
+    .check-status-btn {
+    padding: 10px;
+    background-color: #4a90e2;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    margin-bottom: 20px; 
+    font-weight: bold;
+    font-size: 22px;
+  }
+  .check-status-btn:hover {
+    
+    background-color: #0f335c;
+  }
+  </style>
+</head>
+
+<body style="background-color: #f8f9fa;">
+  <div class="container" style="background-color: #e9ecef;">
+
+    <div class="logout-btn">
+      <a href="/" title="Logout">
+        <span class="gate-symbol">&#128682;</span>
+      </a>
+    </div>
+    <form action="/status" method="GET">
+      <button class="check-status-btn" type="submit">Check Query Status</button>
+    </form>
+    <div class="card" id="query-form">
+      <h1>Enter Your Details to Submit Query</h1>
+      <form action="/submit_query" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="empid">Employee ID:</label>
+        <input type="text" id="empid" name="empid" required />
+
+        <label for="course">Course:</label>
+        <select id="course" name="course" required>
+          <option value="">Select Course</option>
+          <option value="B.Tech">B.Tech</option>
+          <option value="M.Tech">M.Tech</option>
+          <option value="MBA">MBA</option>
+        </select>
+
+        <label for="year">Year:</label>
+        <select id="year" name="year" required>
+          <option value="">Select Year</option>
+          <option value="1">First Year</option>
+          <option value="2">Second Year</option>
+          <option value="3">Third Year</option>
+          <option value="4">Fourth Year</option>
+        </select>
+
+
+        <!-- <label for="section">Section:</label>
+        <input type="text" id="section" name="section" required /> -->
+
+        <label for="branch">Branch:</label>
+        <select name="branch" id="branch">
+          <option value="" selected="selected">Select Branch</option>
+        </select>
+     
+        <label for="lab">Lab:</label>
+       <select name="lab" id="lab">
+          <option value="" selected="selected">Please select Branch first</option>
+        </select>
+
+        <label for="room">Lab Room Number:</label>
+        <input type="text" id="room" name="room" required />
+
+        <label for="block_no">Block No:</label>
+        <input type="text" id="block-no" name="block_no" required />
+
+        <!-- <label for="floor_no">Floor No:</label>
+        <input type="text" id="floor-no" name="floor_no" required /> -->
+
+
+        <label for="query">Query:</label>
+        <select id="query" name="query" onchange="showOtherOption()" required>
+          <option value="">Select Query Type</option>
+          <option value="Internet Not Working for all PCs">
+            Internet Not Working for all PCs
+          </option>
+          <option value="Projector Not Working">Projector Not Working</option>
+          <option value="Projector Speaker Not Working">
+            Projector Speaker Not Working
+          </option>
+          <option value="OTHERS">Others</option>
+        </select>
+
+        <div id="other-query" class="dynamic-field">
+          <label for="other-query-text">Please Specify:</label>
+          <textarea id="other-query-text" name="other-query-text"></textarea>
+        </div>
+
+        <input type="submit" value="Submit Query" />
+      </form>
+    </div>
+  </div>
+
+  <script>
+    var labObject = {
+          "CSE": ["Java Lab", "DAA Lab", "DBMS Lab", "Python"],
+          "ECE": ["VLSI Lab", "Electronic circuit", "ADE Lab"],
+         "EEE": ["ADE Lab", "Machines Lab", "Electrical circuit Lab", "BEE Lab"],
+          "CIVIL": ["Auto CAD", "Surveying", "Hydraulics", "Building Material Practice Lab","Strength Of Materials"],
+          "MECH": ["Carpentry Lab", "Fluid Lab", "Thermodinamics Lab", "Kinematics Lab"],
+          "CSM": ["Java Lab", "AI Lab", "ML Lab", "NLP Lab"],
+          "CSD": ["ML Lab", "DBMS Lab", "Python Lab", "DAA Lab"],
+          "CSC": ["Cyber Security", "Computer Networks", "Operating System", "DBMS Lab", "DAA Lab"],
+          "H&S": ["Engineering Chemistry", "Applied Physics", "Internet of Things", "Engineering Drawing"],
+          "CEER": ["ISI LAB", "EEP Lab", "SIP Lab"],
+        }
+        window.onload = function() {
+  var branchSel = document.getElementById("branch");
+  var chapterSel = document.getElementById("lab");
+  for (var x in labObject) {
+    branchSel.options[branchSel.options.length] = new Option(x, x);
+  }
+  branchSel.onchange = function() {
+  //empty Chapters dropdown
+  chapterSel.length = 1;
+    //display correct values
+    var z = labObject[branchSel.value];
+    for (var i = 0; i < z.length; i++) {
+      chapterSel.options[chapterSel.options.length] = new Option(z[i], z[i]);
+    }
+  }
+}
+    function showOtherOption() {
+      var querySelect = document.getElementById("query");
+      var otherQuery = document.getElementById("other-query");
+      var otherQueryText = document.getElementById("other-query-text");
+      var successCard = document.getElementById("success-card");
+      var backBtn = document.getElementById("back-btn");
+
+      if (querySelect.value === "OTHERS") {
+        otherQuery.style.display = "block";
+        otherQueryText.setAttribute("name", "query");
+        //querySelect.value = otherQueryText.value;
+        otherQueryText.setAttribute("required", true);
+      } else {
+        otherQuery.style.display = "none";
+        otherQueryText.removeAttribute("name");
+        otherQueryText.removeAttribute("required");
+      }
+    }
+
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Query Status</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: lightyellow;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        #form-container {
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .logout-btn {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+
+        .logout-btn a {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #ccc;
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            line-height: 30px;
+            font-size: 18px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #message-container {
+            max-width: 400px;
+            margin: 0 auto;
+            margin-top: -80px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+
+        .message-card {
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .message-card p {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .message-card span {
+            font-weight: bold;
+        }
+
+        .message-card button {
+            margin-top: 20px;
+        }
+        
+    </style>
+</head>
+<body>
+    <h1>Query Status</h1>
+    <div id="form-container">
+        <div class="logout-btn">
+            <a href="/user" title="Logout">&#128682;</a>
+        </div>
+        <form action="/status" method="POST" id="status-form">
+            <label for="tokenNumber"> Enter Token Number:</label>
+            <input type="text" name="tokenNumber" id="tokenNumber" required>
+            <br><br>
+            <button type="submit">Check Status</button>
+        </form>
+    </div>
+
+    <% if (typeof queryStatus !== 'undefined') { %>
+    <div id="message-container">
+        <div class="message-card">
+            <p>The Status of your Query is: <span><%= queryStatus %></span></p>
+            <% if(queryStatus !== 'Resolved' && queryStatus !== 'Not Found') { %>
+                <p>Please stay tuned!</p>
+            <% } else if(queryStatus === 'Not Found') { %>
+                <p>The query for your Token Number does not exist!</p>
+            <% } %>
+            <button onclick="toggleForm()">Back</button>
+        </div>
+    </div>
+    <% } else if (typeof errorMessage !== 'undefined') { %>
+    <div id="message-container">
+        <div class="message-card">
+            <p><%= errorMessage %></p>
+            <button onclick="toggleForm()">Back</button>
+        </div>
+    </div>
+    <% } %>
+
+    <script>
+        function toggleForm() {
+            document.getElementById("message-container").style.display = "none";
+            document.getElementById("form-container").style.display = "block";
+        }
+    </script>
+</body>
+</html>
